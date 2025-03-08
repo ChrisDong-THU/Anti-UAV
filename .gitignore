@@ -1,7 +1,8 @@
 # custom
 logs/
 tmp/
-test*
+test_samples/
+tests/
 pretrained/
 drone_data/
 

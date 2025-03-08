@@ -1,0 +1,1 @@
+bash tools/dist_test.sh  projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_drone.py logs/exp1/latest.pth 8 --eval bbox
