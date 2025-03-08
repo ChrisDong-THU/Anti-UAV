@@ -1,0 +1,2 @@
+bash tools/dist_train.sh projects/configs/co_deformable_detr/co_deformable_detr_swin_small_3x_drone.py 8 logs/exp2
+# bash tools/dist_train.sh projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_drone.py 8 logs/exp4
