@@ -41,31 +41,33 @@ def prepare_frames_or_path(video_path):
 def main(args):
     # config_file = 'projects/configs/co_deformable_detr/co_deformable_detr_swin_small_3x_drone.py'
     config_file = 'projects/configs/co_deformable_detr/co_deformable_detr_r50_1x_drone.py'
-    # checkpoint_file = 'logs/exp2/epoch_5.pth'
-    checkpoint_file = 'logs/exp1/epoch_5.pth'
+    # ckpt_path = 'logs/exp2/epoch_5.pth'
+    ckpt_path = 'logs/exp3/latest.pth'
     
-    detector = init_detector(config=config_file, checkpoint=checkpoint_file)
+    detector = init_detector(config=config_file, checkpoint=ckpt_path)
 
-    out_folder = f"tmp/track1_test/{args.output_suffix}"
+    exp_name = ckpt_path.split('/')[-2] + '_' + ckpt_path.split('/')[-1].split('.')[0]
+    out_folder = f"tmp/track1_test/{args.output_suffix}/{exp_name}"
     video_folder = f"{out_folder}/videos"
     measurement_folder = f"{out_folder}/measurements"
     os.makedirs(out_folder, exist_ok=True)
     os.makedirs(video_folder, exist_ok=True)
     os.makedirs(measurement_folder, exist_ok=True)
     
-    test_video_paths = os.listdir(args.test_path)
+    test_path = "/mnt/disk_2/yuji/UAV_data/track1_test"
+    test_video_paths = os.listdir(test_path)
     test_video_paths.sort()
     
     # test_video_paths = ['20190925_133630_1_6']
     
-    for test_video_path in test_video_paths:
+    for test_video_path in test_video_paths[:120]:
         # video path
-        frames_or_path = prepare_frames_or_path(osp.join(args.test_path, test_video_path))
+        frames_or_path = prepare_frames_or_path(osp.join(test_path, test_video_path))
         visible_path = frames_or_path
         
         if osp.isdir(visible_path):
-                frames = sorted([osp.join(visible_path, f) for f in os.listdir(visible_path) if f.endswith((".jpg", ".jpeg", ".png"))]) # compatible with more formats
-                height, width = cv2.imread(frames[0]).shape[:2]
+            frames = sorted([osp.join(visible_path, f) for f in os.listdir(visible_path) if f.endswith((".jpg", ".jpeg", ".png"))]) # compatible with more formats
+            height, width = cv2.imread(frames[0]).shape[:2]
         
         # save results as video
         if args.save_to_video:
@@ -102,8 +104,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--test_path", default="/mnt/disk_2/yuji/UAV_data/track1_test", help="path to test video path")
-    parser.add_argument("--output_suffix", default="exp1", help="Suffix to output folder")
+    parser.add_argument("--output_suffix", default="r50", help="Suffix to output folder")
     
     parser.add_argument("--save_to_video", action="store_true", help="Save results to a video.")
     parser.add_argument("--save_to_txt", action="store_true", help="Save results to a txt.")
